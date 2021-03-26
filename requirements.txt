@@ -33,7 +33,7 @@ requests==2.22.0
 elasticsearch==7.0.5
 marshmallow==3.2.1
 flask_cors==3.0.8
-PyYAML==5.1.2
+PyYAML==5.4
 pandas==0.25.3
 flask_restful==0.3.7
 python-magic==0.4.15
