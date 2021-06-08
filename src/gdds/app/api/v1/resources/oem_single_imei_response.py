@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -35,8 +35,8 @@ from flask_restful import Resource
 from flask_apispec import use_kwargs
 from ..models.oem_response import OemResponse
 from ..schema.input_schema import OemResponseSchema
-from ..common.response import STATUS_CODES, MIME_TYPES
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
 class OemSingleImei(Resource):
@@ -48,13 +48,28 @@ class OemSingleImei(Resource):
         """method to get OEM's response for single IMEI."""
 
         try:
+            all_imeis = []
+
+            if kwargs['oem_imei'] in kwargs['oem_other_imeis']:
+                return custom_json_response(_("Every IMEI slot must have unique IMEI"),
+                                            STATUS_CODES.get('UNPROCESSABLE_ENTITY'), MIME_TYPES.get('JSON'))
+
             chk_imei = OemResponse.query.filter(OemResponse.oem_imei == kwargs['oem_imei']).first()
 
             if chk_imei:
+
+                chk_imei.oem_other_imeis = kwargs['oem_other_imeis']
+                for imei in kwargs['oem_other_imeis']:
+                    all_imeis.append(imei)
+                all_imeis.append(kwargs['oem_imei'])
+
                 chk_imei.oem_serial_no = kwargs['oem_serial_no'].strip()
                 chk_imei.oem_color = kwargs['oem_color']
                 chk_imei.oem_brand = kwargs['oem_brand']
                 chk_imei.oem_model = kwargs['oem_model']
+                chk_imei.oem_rat = kwargs['oem_rat']
+                chk_imei.oem_mac = kwargs['oem_mac']
+                chk_imei.oem_all_imeis = all_imeis
                 chk_imei.oem_response_date = strftime("%Y-%m-%d %H:%M:%S")
 
                 db.session.flush()

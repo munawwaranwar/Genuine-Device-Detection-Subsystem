@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -40,11 +40,14 @@ class OemResponse(db.Model):
     oem_imei = db.Column(db.String(50), unique=True)
     oem_tac = db.Column(db.String(8), nullable=False)
     gsma_brand = db.Column(db.String(300))
-    # oem_id = db.Column(db.String(50))
+    oem_other_imeis = db.Column(db.ARRAY(db.String))
+    oem_all_imeis = db.Column(db.ARRAY(db.String))
     oem_serial_no = db.Column(db.String(200))
     oem_color = db.Column(db.String(100))
     oem_brand = db.Column(db.String(300))
     oem_model = db.Column(db.String(300))
+    oem_rat = db.Column(db.String(100))
+    oem_mac = db.Column(db.String(100))
     oem_response_date = db.Column(db.DateTime, default=strftime("%Y-%m-%d %H:%M:%S"))
 
     oem_id = db.Column(db.String(50), db.ForeignKey('oem_logins.oem_id'))

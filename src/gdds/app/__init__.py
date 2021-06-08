@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -35,7 +35,7 @@ from flask_babel import Babel
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
-from .api.v1.common.lazy_text_encoder import JSON_Encoder
+from gdds.app.api.common.lazy_text_encoder import JSON_Encoder
 
 
 app = Flask(__name__)
@@ -70,10 +70,10 @@ app.config['SUPPORTED_LANGUAGES'] = conf['supported_languages']
 db = SQLAlchemy()
 db.init_app(app)
 
-from .api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 pg_connect = connect()
 
-from .api.v1.routes import *
+from gdds.app.api.routes import *
 
 
 @babel.localeselector

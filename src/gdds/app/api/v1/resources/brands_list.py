@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ from flask import Response
 from flask_apispec import use_kwargs
 from flask_restful import Resource
 from .....app import db, app
-from ..common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 from ..models.brand_mapping import BrandMapping
 from ..schema.input_schema import BrandSearchSchema
 

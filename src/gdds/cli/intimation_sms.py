@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -31,7 +31,7 @@ THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRAN
 import click
 import requests
 from ..app import conf
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 
 
 # noinspection PyUnusedLocal,SqlDialectInspection,SqlNoDataSourceInspection
@@ -81,17 +81,13 @@ def kannel_sms(num, sms, mno):
     msisdn = "0" + num[2:]
     print("Sending SMS to :", msisdn, "\tSMS Text:", sms)
 
-    if mno == 'jazz':
-        MNO_SMSC = "MNO_1_SMSC"
-    elif mno == 'telenor':
-        MNO_SMSC = "MNO_2_SMSC"
-    elif mno == 'ufone':
-        MNO_SMSC = "MNO_3_SMSC"
-    elif mno == 'zong':
-        MNO_SMSC = "MNO_4_SMSC"
+    if mno in conf['mnos']:
+        MNO_SMSC = mno
+    else:
+        MNO_SMSC = conf['mnos'][0]
 
     payload = {'username': conf[MNO_SMSC]['kannel_username'], 'password': conf[MNO_SMSC]['kannel_password'],
-               'smsc': conf[MNO_SMSC]['kannel_smsc'], 'from': conf['kannel_shortcode'], 'to': num,
+               'smsc': conf[MNO_SMSC]['kannel_smsc'], 'from': conf['kannel_shortcode'], 'to': msisdn,
                'text': sms}
 
     requests.get(conf['kannel_url'], params=payload)

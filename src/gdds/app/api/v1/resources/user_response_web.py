@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -36,18 +36,24 @@ from flask_apispec import use_kwargs
 from ..models.duplication_list import DupList
 from ..models.user_response import UserResponse
 from ..schema.input_schema import UserResponseSchema
-from ..common.response import STATUS_CODES, MIME_TYPES
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
-# noinspection PyComparisonWithNone
+# noinspection PyComparisonWithNone,PyUnresolvedReferences
 class WebUserResponse(Resource):
-    """Flask resource to provide user response through Web Portal."""
+    """Flask resource to retrieve user response through Web Portal."""
+
+    @use_kwargs(UserResponseSchema().fields_dict, locations=['json'])
+    def post(self, **kwargs):
+        """method to update user response through Web Portal."""
+
+        result = self.user_response(kwargs)
+        return result
 
     @staticmethod
-    @use_kwargs(UserResponseSchema().fields_dict, locations=['json'])
-    def put(**kwargs):
-        """method to update user response through Web Portal."""
+    def user_response(kwargs):
+        """Static method to extract User response via Web portal """
 
         try:
 

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ import click
 from flask_babel import _
 from time import strftime
 from ..app import app, conf
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 
 
 # noinspection SqlDialectInspection,SqlNoDataSourceInspection,PyPep8Naming
@@ -49,24 +49,34 @@ def generate():
         cur.execute("""SELECT imei FROM duplication_list WHERE imei_status IS FALSE """)
         imei_list = set([l[0] for l in cur.fetchall()])
 
-        black_list = "Black-List_" + strftime("%Y-%m-%d_%H-%M-%S") + '.csv'
-        bl_path = os.path.join(DOWNLOAD_PATH, black_list)
+        if imei_list:
+            black_list = "Black-List_" + strftime("%Y-%m-%d_%H-%M-%S") + '.csv'
+            bl_path = os.path.join(DOWNLOAD_PATH, black_list)
 
-        with open(bl_path, 'w') as file:
-            file.write(',\n'.join(imei_list))
+            with open(bl_path, 'w') as bl:
+                bl.write('imei,reason\n')
+                for imei in imei_list:
+                    bl.write(imei + ',duplicated\n')
+                    # bl.write(",duplicated\n".join(imei_list))
 
-        file.close()
-
-        cur.execute("""SELECT imei, imsi FROM duplication_list WHERE imei_status IS TRUE """)
-        pairs = cur.fetchall()
+            bl.close()
 
         pair_list = "Pair-List_" + strftime("%Y-%m-%d_%H-%M-%S") + '.csv'
         pl_path = os.path.join(DOWNLOAD_PATH, pair_list)
 
+        if conf['pair_list_triplet']: params = "imei,imsi,msisdn"
+        else: params = "imei,imsi"
+
+        cur.execute("""SELECT {p} FROM duplication_list WHERE imei_status IS TRUE """.format(p=params))
+        pairs = cur.fetchall()
+
         with open(pl_path, 'w') as file:
+            file.write(params + '\n')
             for row in pairs:
-                file.write(row[0] + ',')
-                file.write(row[1] + '\n')
+                if conf['pair_list_triplet']:
+                    file.write(row[0] + ',' + row[1] + ',' + row[2] + '\n')
+                else:
+                    file.write(row[0] + ',' + row[1] + '\n')
 
         file.close()
 

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -29,7 +29,7 @@ THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRAN
 """
 
 from marshmallow import Schema, fields
-from ..common.validations import Validations
+from gdds.app.api.common.validations import Validations
 
 
 class BulkUploadSchema(Schema):
@@ -107,6 +107,9 @@ class AssociatedBrandsSchema(Schema):
 
 class UserResponseSchema(Schema):
     """Marshmallow schema for User response."""
+
+    class Meta:
+        strict = True
     uid = fields.String(required=True)
     user_serial_no = fields.String(required=True, validate=Validations.device_serial_no)
     user_imeis = fields.List(fields.String(required=True, validate=Validations.validate_imei), required=True,
@@ -124,10 +127,14 @@ class UserResponseSchema(Schema):
 class OemResponseSchema(Schema):
     """Marshmallow schema for User response."""
     oem_imei = fields.String(required=True, validate=Validations.validate_imei)
+    oem_other_imeis = fields.List(fields.String(required=False, validate=Validations.validate_imei), required=False,
+                                  missing=[])
     oem_serial_no = fields.String(required=True, validate=Validations.device_serial_no)
     oem_color = fields.String(required=True, validate=Validations.device_color)
     oem_brand = fields.String(required=True, validate=Validations.validate_brands)
     oem_model = fields.String(required=True, validate=Validations.device_model)
+    oem_rat = fields.String(required=True, validate=Validations.validate_rat)
+    oem_mac = fields.String(required=False, missing="00:00:00:00", validate=Validations.validate_mac)
 
     @property
     def fields_dict(self):

@@ -1,6 +1,7 @@
 [console_scripts]
 generate-lists = gdds.cli.generate_lists:generate
 import = gdds.cli.upload_duplication_list:process
+register-with-dps = gdds.cli.dps_registration:register
 run-comparison = gdds.cli.run_comparison:compare
 send-intimation-sms = gdds.cli.intimation_sms:intimation
 send-request-sms = gdds.cli.sms_to_users:send_sms

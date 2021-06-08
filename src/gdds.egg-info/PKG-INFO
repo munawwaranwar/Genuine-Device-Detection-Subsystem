@@ -111,15 +111,21 @@ Description:
         
         * To load Duplication-List from DIRBS-CORE
         ```bash
-        dirbs-import duplication_list <file_path>
+        import duplication_list <file_path>
         e.g.
-        dirbs-import duplication_list /home/gdds_files/dup_list.csv
+        import duplication_list /home/gdds_files/dup_list.csv
         ```
         
-        * To send Request-SMS to all duplicated users to provide their device info
+        * Send Request-SMS to all duplicated users to ask for device info
         ```bash
-        send-request-sms
+        send-request-sms all
         ```
+        
+        * Send Request-SMS only to unnotified users to ask for device info
+        ```bash
+        send-request-sms unnotified
+        ```
+        
         
         * To run Comparison-Algorithm
         ```bash

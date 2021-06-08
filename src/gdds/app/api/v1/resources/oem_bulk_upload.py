@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -38,13 +38,13 @@ from shutil import rmtree
 from flask_babel import _
 from flask import request
 from .....app import conf, app
-from ..common.response import *
+from gdds.app.api.common.response import *
 from flask_restful import Resource
 from flask_apispec import use_kwargs
 from werkzeug.utils import secure_filename
-from ..common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 from ..schema.input_schema import BulkUploadSchema
-from ..common.error_handlers import custom_json_response, custom_text_response
+from gdds.app.api.common.error_handlers import custom_json_response, custom_text_response
 
 
 DOWNLOAD_FOLDER = conf['Download_Path']
@@ -74,9 +74,10 @@ class OemBulkUpload(Resource):
                     if filename != '' or filetype == 'text/plain':
                         try:
                             with open(filepath, 'r') as newfile:
-                                df = pd.read_csv(newfile, usecols=range(5), dtype={"IMEI": str, "Serial_no": str,
+                                df = pd.read_csv(newfile, usecols=range(8), dtype={"IMEI": str, "Serial_no": str,
                                                                                    "Color": str, "Brand": str,
-                                                                                   "Model": str})
+                                                                                   "Model": str, "RAT": str,
+                                                                                   "MAC": str, "Other_IMEIs": str})
                             newfile.close()
                         except Exception as e:
                             if e:
@@ -87,12 +88,14 @@ class OemBulkUpload(Resource):
                         total_rows, total_columns = df.shape
 
                         if df.columns[0] == 'IMEI' and df.columns[1] == 'Serial_no' and df.columns[2] == 'Color' and \
-                                df.columns[3] == 'Brand' and df.columns[4] == 'Model':
+                           df.columns[3] == 'Brand' and df.columns[4] == 'Model' and df.columns[5] == 'RAT' and \
+                           df.columns[6] == 'MAC' and df.columns[7] == 'Other_IMEIs':
 
                             if not df.empty:
                                 df['Serial_no'] = df['Serial_no'].str.strip()
                                 df1 = df[df.isnull().any(axis=1)]   # to detect null values in any column
-                                df2 = df.dropna()                   # to drop rows with one or more null values
+                                # df2 = df.dropna()                   # to drop rows with one or more null values
+                                df2 = df
                                 df3 = df2[~(df2.IMEI.astype(str).str.match(conf['validation_regex']['imei']))]
                                 df2 = df2[(df2.IMEI.astype(str).str.match(conf['validation_regex']['imei']))]
                                 df4 = df2[~(df2.Serial_no.astype(str).str.match(conf['validation_regex']['serial_no']))]
@@ -100,7 +103,6 @@ class OemBulkUpload(Resource):
 
                                 final_rows, final_columns = df2.shape
                                 del_rec = (total_rows - final_rows)
-
                                 df2.to_csv(filepath, index=False, header=False)
 
                                 lst_df = [df1, df3, df4]
@@ -111,17 +113,26 @@ class OemBulkUpload(Resource):
                                 cur = con.cursor()
 
                                 cur.execute(""" CREATE TABLE if not exists test_response (t_imei text, t_serial text,
-                                            t_color text, t_brand text, t_model text)""")
+                                            t_color text, t_brand text, t_model text, t_rat text, t_mac text, 
+                                            t_other_imeis text)""")
 
                                 f = open(filename1)
                                 cur.copy_from(f, 'test_response', sep=",")
 
                                 cur.execute("""UPDATE oem_response SET oem_serial_no = test_response.t_serial,
                                              oem_color = test_response.t_color, oem_brand = test_response.t_brand, 
-                                             oem_model = test_response.t_model, oem_response_date = '{}' 
+                                             oem_model = test_response.t_model, oem_rat = test_response.t_rat,
+                                             oem_mac = test_response.t_mac, 
+                                             oem_other_imeis = string_to_array(test_response.t_other_imeis, '|'), 
+                                             oem_response_date = '{}' 
                                              FROM test_response
                                              WHERE oem_imei = test_response.t_imei""".
                                             format(strftime("%Y-%m-%d %H:%M:%S")))
+
+                                cur.execute("""UPDATE oem_response SET oem_all_imeis = array_append(oem_other_imeis, 
+                                                                                                    oem_imei)
+                                               FROM test_response
+                                               WHERE oem_imei = test_response.t_imei """)
 
                                 cur.execute(""" drop table if exists test_response;  """)
                                 con.commit()

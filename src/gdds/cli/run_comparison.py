@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -29,7 +29,7 @@ THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRAN
 """
 
 import click
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 
 
 # noinspection SqlDialectInspection,SqlNoDataSourceInspection
@@ -41,22 +41,22 @@ def compare():
     con = connect()
     cur = con.cursor()
 
-    cur.execute("""select distinct user_response.uid, user_response.user_imeis, oem_response.oem_serial_no
-                    from oem_response
-                    INNER JOIN user_response
-                    ON user_response.user_serial_no = oem_response.oem_serial_no
-                    AND user_response.uid_status is NULL
+    cur.execute("""select distinct user_response.uid, user_response.user_imeis, 
+                                   oem_response.oem_serial_no, oem_response.oem_all_imeis
+                        from oem_response
+                        INNER JOIN user_response
+                        ON user_response.user_serial_no = oem_response.oem_serial_no
+                        AND user_response.user_imeis @> oem_response.oem_all_imeis
+                        AND user_response.user_imeis <@ oem_response.oem_all_imeis
+                        AND oem_response.oem_all_imeis @> user_response.user_imeis
+                        AND oem_response.oem_all_imeis <@ user_response.user_imeis
+                        AND user_response.uid_status is NULL
                 """)
 
     serial_nos = cur.fetchall()
 
     for row in serial_nos:
-
-        cur.execute("""SELECT array_agg(oem_imei::TEXT ORDER BY OEM_IMEI) from oem_response 
-                       where oem_serial_no = '{serial}' """.format(serial=row[2]))
-        res = cur.fetchall()
-
-        c = set(res[0][0]) == set(row[1])
+        c = set(row[3]) == set(row[1])
 
         if c:
             cur.execute("""UPDATE duplication_list SET imei_status = TRUE where uid = '{u}' """.format(u=row[0]))

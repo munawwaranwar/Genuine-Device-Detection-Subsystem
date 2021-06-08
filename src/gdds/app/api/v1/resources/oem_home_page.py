@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -36,7 +36,7 @@ from flask_apispec import use_kwargs
 from .....app import db, app
 from ..models.oem_response import OemResponse
 from ..schema.input_schema import OemHomePageSchema
-from ..common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 
 
 # noinspection PyComparisonWithNone

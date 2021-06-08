@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -31,7 +31,7 @@ THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRAN
 import click
 import requests
 from ..app import conf
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 
 
 # noinspection PyUnusedLocal,SqlDialectInspection,SqlNoDataSourceInspection,PyUnboundLocalVariable,PyPep8Naming
@@ -62,10 +62,10 @@ def send_sms(sms_to):
         for m in msisdns:
             msisdn = "0" + m[0][2:]
 
-            if m[2] == 'jazz': MNO_SMSC = "MNO_1_SMSC"
-            elif m[2] == 'telenor': MNO_SMSC = "MNO_2_SMSC"
-            elif m[2] == 'ufone': MNO_SMSC = "MNO_3_SMSC"
-            elif m[2] == 'zong': MNO_SMSC = "MNO_4_SMSC"
+            if m[2] in conf['mnos']:
+                MNO_SMSC = m[2]
+            else:
+                MNO_SMSC = conf['mnos'][0]
 
             sms = conf['SMS_Text']['initial_sms'] + m[1] + conf['SMS_Text']['link_text']
             sms_intimation(msisdn, sms, MNO_SMSC)

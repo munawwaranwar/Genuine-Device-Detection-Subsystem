@@ -1,5 +1,5 @@
 
-# Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+# Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 # All rights reserved.
 
@@ -28,14 +28,14 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-# DRS global configurations
+# GDDS global configurations
 global:
 
   # DataBase Parameters
-  db_name: 'gdds'
-  db_username: 'username'
-  db_password: 'password'
-  db_host: ''
+  db_name: 'gdds'     #'dps'
+  db_username: 'postgres'
+  db_password: 'postgres'     # 'sms003'
+  db_host: '192.168.100.252'
 
   # SQL_ALCHEMY Parameters
   pool_size: 100
@@ -55,30 +55,40 @@ global:
   # Maximum days to respond for OEMs and Users
   threshold_days: 15
 
+  # Pairing-List with or without triplet. Without triplet it only generates IMEI & IMSI for DIRBS-Core below version-12
+  pair_list_triplet: false
+
+  # Keywords expecting from MNOs for their USSD data, to communicate with Kannel
+  allowed_keywords: [ 'GDDS', 'gdds' ]
+
   # System Paths for files
-  Download_Path: '/home/GDDS/downloads'
-  GDDS_Lists: '/home/GDDS/gdds_lists'
+  Download_Path: '/home/munawar/PycharmProjects/GDDS_BACKEND/downloads'
+  GDDS_Lists: '/home/munawar/PycharmProjects/GDDS_BACKEND/gdds_lists'
 
   # Names of Mobile Operators
-  mnos: ["operator-1", "operator-2", "operator-3", "operator-4"]
+  mnos: ["operator01", "operator02", "operator03", "zong", "Huawei", "huawei"]
+
+  # Parameters for DPS Integration
+  dps_api: 'http://192.168.100.248/api/v1/device-reg'
 
   # Kannel related parameters
   kannel_url: 'http://192.168.100.70:13013/cgi-bin/sendsms'
-  kannel_shortcode: '1234'
+  kannel_shortcode: '03029847788'
 
-  MNO_1_SMSC:
+  # Below operator Keys must be same as above MNOs name
+  operator01:
     kannel_username: 'tester'
     kannel_password: 'foobar'
     kannel_smsc: 'at'
-  MNO_2_SMSC:
+  operator02:
     kannel_username: 'tester'
     kannel_password: 'foobar'
     kannel_smsc: 'at'
-  MNO_3_SMSC:
+  operator03:
     kannel_username: 'tester'
     kannel_password: 'foobar'
     kannel_smsc: 'at'
-  MNO_4_SMSC:
+  operator04:
     kannel_username: 'tester'
     kannel_password: 'foobar'
     kannel_smsc: 'at'
@@ -101,10 +111,12 @@ global:
     msisdn: '^\+?[0-9]{11,15}$'
     paircode: '^[a-zA-Z0-9]{8}$'
     imei: '^[A-F0-9]{14,16}$'
-    tac: '^[0-9]{8}$'
+    tac: '^[0-9]{8}$'       #   '^\d{8}$'
     mno: '^.{1,50}$'
     imsi: '^\d{15}$'
     serial_no: '^.{1,100}$'
+    mac: '^([0-9A-F]{2,4}[.:-]){3,7}([0-9A-F]{2,4})$'
+    rat: '^(2G|3G|4G|5G)[,]?(2G|3G|4G|5G)?[,]?(2G|3G|4G|5G)?[,]?(2G|3G|4G|5G)?$'
     date: '^((19|20)\d{2})\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$'
     email: '^[a-zA-Z0-9\x2D\x2E\x5F]+@[a-zA-Z0-9_]+?\.[a-zA-Z]{2,3}$'
 
@@ -116,6 +128,7 @@ global:
       address: '^(?! )[A-Za-z0-9\x23\x2F\x2D\x40\x5F\x5C\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       brand: '^(?! )[A-Za-z0-9\x2D\x26\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       model_name: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
+      model_color: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       description: '^(?! )[\x21-\x7E\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
     es:
       username: '^(?! )[A-Za-z\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s\x23\x2D\x40\x5F]{1,1000}(?<! )$'
@@ -124,6 +137,7 @@ global:
       address: '^(?! )[A-Za-z0-9\x23\x2F\x2D\x40\x5F\x5C\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       brand: '^(?! )[A-Za-z0-9\x2D\x26\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       model_name: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
+      model_color: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
       description: '^(?! )[\x21-\x7E\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A\s]{1,1000}(?<! )$'
     en:
       username: '^(?! )[A-Za-z\s\x23\x2D\x40\x5F]{1,1000}(?<! )$'
@@ -132,6 +146,7 @@ global:
       address: '^(?! )[A-Za-z0-9\x23\x2F\x2D\x40\x5F\x5C\s]{1,1000}(?<! )$'
       brand: '^(?! )[A-Za-z0-9\x2D\x26\s]{1,100}(?<! )$'
       model_name: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\s]{1,100}(?<! )$'
+      model_color: '^(?! )[A-Za-z0-9\x27\x2D\x28\x29\s]{1,100}(?<! )$'
       description: '^(?! )[\x21-\x7E\s]{1,1000}(?<! )$'
 
   SMS_Text:

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -32,11 +32,11 @@ from flask_babel import _
 from flask_restful import Resource
 from flask_apispec import use_kwargs
 from .....app import db, app
-from ..common.response import *
+from gdds.app.api.common.response import *
 from ..models.oem_logins import OemLogins
 from ..models.brand_mapping import BrandMapping
 from ..schema.input_schema import KeyclockSchema
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
 class KeyClockInput(Resource):

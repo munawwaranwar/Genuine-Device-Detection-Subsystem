@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ import json
 from flask import Response
 from flask_restful import Resource
 from .....app import db, app
-from ..common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 from ..models.oem_logins import OemLogins
 
 

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -45,6 +45,7 @@ class DupList(db.Model):
     uid = db.Column(db.String(50), unique=True)
     sms_notification = db.Column(db.Boolean)
     imei_status = db.Column(db.Boolean)
+    export_status = db.Column(db.Boolean)
     list_upload_date = db.Column(db.DateTime, default=strftime("%Y-%m-%d %H:%M:%S"))
 
     user_responses = db.relationship('UserResponse', backref='duplication_list.uid', lazy='dynamic')

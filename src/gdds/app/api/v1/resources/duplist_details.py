@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -35,10 +35,10 @@ from gdds.app import app, db, conf
 from flask_restful import Resource
 from flask_apispec import use_kwargs
 from datetime import datetime, timedelta
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.error_handlers import custom_json_response
 from gdds.app.api.v1.models.duplication_list import DupList
 from gdds.app.api.v1.schema.input_schema import DetailedResponseSchema
-from gdds.app.api.v1.common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 
 
 # noinspection PyComparisonWithNone

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -40,8 +40,8 @@ from .....app import db, app
 from ..models.oem_logins import OemLogins
 from ..models.oem_response import OemResponse
 from ..schema.input_schema import BulkImeisSchema
-from ..common.response import STATUS_CODES, MIME_TYPES
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
 # noinspection PyUnboundLocalVariable,PyComparisonWithNone
@@ -68,7 +68,7 @@ class BulkImeiDownload(Resource):
                     filepath = os.path.join(tmp_dir, filename)
 
                     with open(filepath, 'w') as file:
-                        file.write('IMEI,Serial_no,Color,Brand,Model\n')
+                        file.write('IMEI,Serial_no,Color,Brand,Model,RAT,MAC,Other_IMEIs\n')
                         file.write(',\n'.join(imeis))
 
                     file.close()

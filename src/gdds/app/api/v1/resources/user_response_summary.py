@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ from flask import Response
 from flask_restful import Resource
 from gdds.app import app, db
 from gdds.app.api.v1.models.user_response import UserResponse
-from gdds.app.api.v1.common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 
 
 # noinspection PyComparisonWithNone

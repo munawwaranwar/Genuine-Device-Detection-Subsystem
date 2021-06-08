@@ -1,6 +1,6 @@
 
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -31,9 +31,8 @@ THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRAN
 
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from gdds.app.api.v1.models import *
+# from gdds.app.api.v1.models import *
 from gdds.app import app, db
-
 
 migrate = Migrate(app, db)
 manager = Manager(app)

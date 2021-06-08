@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -35,9 +35,9 @@ from .....app import db, app
 from ..models.oem_logins import OemLogins
 from ..models.oem_response import OemResponse
 from ..models.brand_mapping import BrandMapping
-from ..common.response import STATUS_CODES, MIME_TYPES
+from gdds.app.api.common.response import STATUS_CODES, MIME_TYPES
 from ..schema.input_schema import AssociateBrandsSchema
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
 class AssociateBrands(Resource):

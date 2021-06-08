@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -36,7 +36,7 @@ import tempfile
 import pandas as pd
 from shutil import rmtree
 from ..app import conf, app
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.db_connection import connect
 
 
 # noinspection PyUnusedLocal

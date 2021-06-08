@@ -48,6 +48,7 @@ src/gdds/app/api/v1/resources/user_response_web.py
 src/gdds/app/api/v1/schema/__init__.py
 src/gdds/app/api/v1/schema/input_schema.py
 src/gdds/cli/__init__.py
+src/gdds/cli/dps_registration.py
 src/gdds/cli/generate_lists.py
 src/gdds/cli/intimation_sms.py
 src/gdds/cli/run_comparison.py

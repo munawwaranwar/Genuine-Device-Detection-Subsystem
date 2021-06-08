@@ -1,6 +1,6 @@
 
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -61,7 +61,8 @@ setup(
             'send-request-sms=gdds.cli.sms_to_users:send_sms',
             'run-comparison=gdds.cli.run_comparison:compare',
             'send-intimation-sms=gdds.cli.intimation_sms:intimation',
-            'generate-lists=gdds.cli.generate_lists:generate'
+            'generate-lists=gdds.cli.generate_lists:generate',
+            'register-with-dps=gdds.cli.dps_registration:register'
       ],
     },
 )

@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -37,8 +37,8 @@ import pandas as pd
 from shutil import rmtree
 from time import strftime
 from ..app import conf, app
-from ..app.api.v1.common.brandname_formatter import BrandsModifier
-from ..app.api.v1.common.db_connection import connect
+from gdds.app.api.common.brandname_formatter import BrandsModifier
+from gdds.app.api.common.db_connection import connect
 
 
 DOWNLOAD_FOLDER = conf['Download_Path']
@@ -223,8 +223,7 @@ class OemImeis:
                             FROM brand_mapping
                             WHERE oem_response.gsma_brand = brand_mapping.brand_name
                             AND oem_response.oem_id IS NULL;
-                        """)
-
+            """)
         con.commit()
         cur.close()
         con.close()

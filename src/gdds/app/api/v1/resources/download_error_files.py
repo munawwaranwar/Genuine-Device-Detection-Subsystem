@@ -1,5 +1,5 @@
 """
-Copyright (c) 2018-2019 Qualcomm Technologies, Inc.
+Copyright (c) 2018-2021 Qualcomm Technologies, Inc.
 
 All rights reserved.
 
@@ -33,10 +33,10 @@ from flask import send_file
 from flask_restful import Resource
 from flask_apispec import use_kwargs
 from flask_babel import _
-from ..common.response import *
+from gdds.app.api.common.response import *
 from .....app import app
 from ..schema.input_schema import ErrorFileSchema
-from ..common.error_handlers import custom_json_response
+from gdds.app.api.common.error_handlers import custom_json_response
 
 
 class ErrorFiles(Resource):
